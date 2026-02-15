@@ -9,8 +9,8 @@
   <style>
     :root{
       --bg:#07090d;
-      --panel:#0e121a;
-      --line:#1b2230;
+      --panel: rgba(12,14,20,.66);
+      --line: rgba(255,255,255,.10);
       --text:#e9eef8;
       --muted:#a7b2c6;
       --teal:#2fe7ff;
@@ -28,40 +28,74 @@
       background: var(--bg);
       color: var(--text);
       overflow-x:hidden;
+      cursor: default;
     }
 
-    /* Graffiti/grit texture + glow */
+    /* BIG MOODY BACKGROUND (your brand pop) */
+    .bg{
+      position:fixed; inset:0;
+      background:
+        radial-gradient(900px 650px at 18% 15%, rgba(47,231,255,.18), transparent 62%),
+        radial-gradient(900px 650px at 86% 28%, rgba(255,204,77,.14), transparent 64%),
+        radial-gradient(900px 650px at 60% 90%, rgba(255,93,143,.10), transparent 64%),
+        linear-gradient(180deg, #07090d, #05060a);
+      pointer-events:none;
+      z-index:-5;
+    }
+
+    /* Optional: if you upload bg-texture.png */
+    .bg::after{
+      content:"";
+      position:absolute; inset:0;
+      background-image: url("assets/bg-texture.png");
+      background-size: cover;
+      background-position: center;
+      opacity:.22;
+      filter: contrast(1.05) saturate(1.05);
+      mix-blend-mode: screen;
+    }
+
+    /* Grit */
     .noise{
       position:fixed; inset:0;
       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
       opacity:.10;
       pointer-events:none;
       mix-blend-mode:overlay;
-    }
-    .spray{
-      position:fixed; inset:-240px;
-      background:
-        radial-gradient(900px 650px at 20% 15%, rgba(47,231,255,.14), transparent 60%),
-        radial-gradient(900px 650px at 88% 28%, rgba(255,204,77,.11), transparent 62%),
-        radial-gradient(900px 650px at 60% 85%, rgba(255,93,143,.10), transparent 64%);
-      filter: blur(50px);
-      opacity:.78;
-      pointer-events:none;
+      z-index:-4;
     }
 
-    .wrap{max-width:1100px;margin:0 auto;padding:26px 18px 70px}
+    /* Cursor trail (WILD MODE) */
+    .trail{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:999;
+      opacity:.85;
+    }
+    .trail img{
+      position:absolute;
+      width:170px;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 10px 25px rgba(0,0,0,.45));
+      opacity:.0;
+      transition: opacity .12s ease;
+    }
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:22px 18px 80px;
+    }
 
     /* Top bar */
     .nav{
       display:flex;align-items:center;justify-content:space-between;gap:12px;
       padding:12px 14px;
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid var(--line);
       background: rgba(10,12,18,.55);
       border-radius:999px;
       backdrop-filter: blur(10px);
-      position:sticky;
-      top:14px;
-      z-index:10;
+      position:sticky; top:14px; z-index:50;
     }
     .brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:.2px}
     .dot{
@@ -82,28 +116,43 @@
     .btn{
       display:inline-flex;align-items:center;justify-content:center;
       padding:12px 16px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: linear-gradient(135deg, rgba(47,231,255,.18), rgba(255,204,77,.12));
+      border:1px solid var(--line);
+      background: linear-gradient(135deg, rgba(47,231,255,.22), rgba(255,204,77,.14));
       color:var(--text);
       font-weight:950;
       text-decoration:none;
       box-shadow: 0 10px 40px rgba(0,0,0,.35);
       cursor:pointer;
+      position:relative;
+      overflow:hidden;
     }
     .btn.ghost{background:transparent}
     .btn.small{padding:10px 14px}
+    .btn:hover{transform: translateY(-1px)}
+    .btn:active{transform: translateY(0px)}
 
-    /* HERO */
+    /* Hover spark stars (functional + flashy) */
+    .spark{
+      position:absolute;
+      width:130px;
+      pointer-events:none;
+      opacity:0;
+      transform: translate(-50%, -50%) scale(.9);
+      filter: drop-shadow(0 10px 25px rgba(0,0,0,.45));
+    }
+
+    /* HERO = CRT WORKSTATION */
     .hero{
       display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:22px;
-      padding:26px 4px 10px;
+      grid-template-columns: 1.05fr .95fr;
+      gap:18px;
+      padding:24px 4px 10px;
       align-items:start;
     }
+
     .kicker{
       display:inline-block;
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid var(--line);
       background: rgba(255,255,255,.04);
       padding:8px 12px;
       border-radius:999px;
@@ -111,6 +160,7 @@
       font-weight:950;
       letter-spacing:.2px;
     }
+
     h1{
       margin:14px 0 10px;
       font-size: clamp(42px, 5vw, 64px);
@@ -118,97 +168,207 @@
       letter-spacing:-1px;
     }
     .sub{color:var(--muted);line-height:1.6;max-width:60ch}
-    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
 
-    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
     .chip{
       padding:9px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid var(--line);
       background: rgba(0,0,0,.18);
       font-weight:950;
       color: rgba(233,238,248,.88);
     }
 
-    .heroArt{
-      margin-top:6px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(12,14,20,.40);
+    /* CRT "Stage" */
+    .crtStage{
+      border:1px solid var(--line);
+      background: var(--panel);
       border-radius: var(--r);
       box-shadow: var(--shadow);
       overflow:hidden;
-      backdrop-filter: blur(10px);
+      position:relative;
       padding:16px;
+      backdrop-filter: blur(10px);
     }
-    .heroArt img{
+    .crtTop{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:12px 14px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      background: rgba(0,0,0,.18);
+      margin-bottom:12px;
+    }
+    .crtTop .mini{color:var(--muted);font-weight:950}
+    .crtTop .pill{
+      padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color:rgba(233,238,248,.88);
+      font-weight:900;
+      font-size:12px;
+    }
+
+    .crtGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+
+    .crtScreen{
+      position:relative;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      background: rgba(0,0,0,.20);
+      padding:14px;
+      overflow:hidden;
+    }
+    .crtScreen::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent 30%);
+      opacity:.8;
+      pointer-events:none;
+    }
+
+    .heroLogo{
       width:100%;
       height:auto;
       display:block;
-      border-radius: 14px;
       filter: drop-shadow(0 18px 40px rgba(0,0,0,.45));
     }
-    .heroArt .caption{
+
+    /* Desktop icons (FUNCTIONAL NAV) */
+    .desk{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
       margin-top:10px;
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
-      line-height:1.35;
+    }
+    .icon{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      border-radius:14px;
+      padding:12px;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+      min-height:78px;
+    }
+    .icon:hover{background: rgba(255,255,255,.06)}
+    .iconTitle{font-weight:950}
+    .iconSub{color:var(--muted);font-weight:800;font-size:12px;margin-top:6px;line-height:1.35}
+    .badge{
+      position:absolute; top:10px; right:10px;
+      font-size:11px;
+      font-weight:950;
+      color:#081018;
+      background: linear-gradient(135deg, rgba(47,231,255,.95), rgba(255,204,77,.85));
+      padding:6px 10px;
+      border-radius:999px;
     }
 
-    /* 90s window panel */
-    .window{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(12,14,20,.65);
-      border-radius: var(--r);
+    /* Section divider using your paint brush */
+    .divider{
+      display:flex; justify-content:center;
+      padding:18px 0 6px;
+      opacity:.95;
+    }
+    .divider img{
+      width:min(860px, 100%);
+      height:auto;
+      filter: drop-shadow(0 18px 40px rgba(0,0,0,.45));
+    }
+
+    /* 90s Window modal */
+    .modalOverlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:200;
+    }
+    .modal{
+      width:min(980px, 100%);
+      border:1px solid var(--line);
+      background: rgba(12,14,20,.85);
+      border-radius:18px;
       box-shadow: var(--shadow);
       overflow:hidden;
       backdrop-filter: blur(10px);
-      margin-top:14px;
+      position:relative;
     }
-    .windowTop{
-      display:flex;align-items:center;gap:8px;
+    .modalTop{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
       padding:12px 14px;
       border-bottom:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.18);
     }
+    .lights{display:flex;gap:8px;align-items:center}
     .wdot{width:10px;height:10px;border-radius:999px;display:inline-block}
     .wdot.r{background:#ff3b30}
     .wdot.y{background:#ffcc00}
     .wdot.g{background:#34c759}
-    .wtitle{margin-left:8px;color:var(--muted);font-weight:950;letter-spacing:.2px}
-    .windowBody{padding:16px}
-    .windowBody p{margin:0;color:var(--muted);line-height:1.55}
-    .iconRow{
-      display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;align-items:flex-end;
-    }
-    .iconRow img{
-      width:86px;height:auto;
-      filter: drop-shadow(0 10px 25px rgba(0,0,0,.35));
-      opacity:.98;
+    .mtitle{color:var(--muted);font-weight:950;letter-spacing:.2px}
+    .close{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      border-radius:12px;
+      padding:10px 12px;
+      font-weight:950;
+      cursor:pointer;
     }
 
-    /* Sections */
-    .section{padding:34px 4px 6px}
-    h2{margin:0 0 12px;font-size:28px}
-    .muted{color:var(--muted)}
-    .grid{
+    .modalBody{
+      padding:14px;
       display:grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1.15fr .85fr;
       gap:14px;
     }
-    .tile{
+    .panel{
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
-      border-radius: var(--r);
-      padding:16px;
+      border-radius:16px;
+      padding:14px;
     }
-    .tile h3{margin:0 0 8px}
-    .tile p{margin:0;color:var(--muted);line-height:1.5}
+    .panel h2{margin:0 0 10px}
+    .panel p{margin:0;color:var(--muted);line-height:1.55}
 
-    /* Contact card */
-    .contactCard{
+    .serviceGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+    .svc{
       border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:12px;
+    }
+    .svc h3{margin:0 0 6px}
+    .svc p{margin:0;color:var(--muted);font-weight:800;font-size:13px;line-height:1.45}
+
+    .sideArt img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:14px;
+      filter: drop-shadow(0 18px 40px rgba(0,0,0,.45));
+    }
+
+    /* Contact */
+    .section{
+      padding:26px 4px 6px;
+    }
+    .section h2{margin:0 0 12px;font-size:28px}
+    .contact{
+      border:1px solid var(--line);
       background: rgba(255,255,255,.03);
-      border-radius: var(--r);
-      padding:16px;
+      border-radius:18px;
+      padding:14px;
       display:grid;
       gap:12px;
     }
@@ -235,123 +395,122 @@
     }
     .sep{opacity:.35}
 
-    @media (max-width: 900px){
+    @media (max-width: 960px){
       .hero{grid-template-columns:1fr}
-      .grid{grid-template-columns:1fr}
+      .desk{grid-template-columns:1fr}
+      .modalBody{grid-template-columns:1fr}
+      .serviceGrid{grid-template-columns:1fr}
       .row{grid-template-columns:1fr}
-      .nav{border-radius:18px}
     }
   </style>
 </head>
 
 <body>
+  <div class="bg"></div>
   <div class="noise"></div>
-  <div class="spray"></div>
+
+  <!-- Cursor trail overlay -->
+  <div class="trail" aria-hidden="true">
+    <img id="trailImg" src="assets/tracking%20cursor.png" alt="" />
+  </div>
 
   <div class="wrap">
-    <div class="nav">
-      <div class="brand"><span class="dot"></span> BEH Creative Services</div>
-      <div class="navlinks">
-        <a href="#services">Services</a>
-        <a href="#assets">Assets</a>
-        <a href="#contact" class="btn small">Get a Quote</a>
-      </div>
-    </div>
 
-    <section class="hero">
+    <header class="nav">
+      <div class="brand"><span class="dot"></span> BEH Creative Services</div>
+      <nav class="navlinks">
+        <a href="#workstation">Workstation</a>
+        <a href="#contact">Contact</a>
+        <button class="btn small" id="openServicesBtn" type="button">
+          Services
+          <img class="spark" src="assets/4%20stars.png" alt="" />
+        </button>
+      </nav>
+    </header>
+
+    <section class="hero" id="workstation">
       <div>
-        <span class="kicker">graffiti energy • 90s creative lab</span>
+        <span class="kicker">immersive • wild • functional</span>
         <h1>Dream. Create. Build.</h1>
         <p class="sub">
-          Logos, brand kits, merch graphics, print layouts, and web/app visuals —
-          bold, clean, and built to distribute.
+          This isn’t a gallery. It’s a creative operating system —
+          built to book clients, deliver files, and make the brand hit.
         </p>
 
         <div class="cta">
-          <a class="btn" href="#contact">Start a Project</a>
-          <a class="btn ghost" href="#services">See Services</a>
+          <button class="btn" id="openQuoteBtn" type="button">
+            Start a Project
+            <img class="spark" src="assets/4%20stars.png" alt="" />
+          </button>
+          <button class="btn ghost" id="openServicesBtn2" type="button">
+            Open Services Window
+            <img class="spark" src="assets/4%20stars.png" alt="" />
+          </button>
         </div>
 
         <div class="chips">
           <span class="chip">Logos</span>
           <span class="chip">Brand Kits</span>
-          <span class="chip">Stickers</span>
-          <span class="chip">Hoodie Art</span>
+          <span class="chip">Hoodie + Tee Art</span>
+          <span class="chip">Print Layouts</span>
           <span class="chip">UI Graphics</span>
         </div>
 
-        <div class="heroArt">
-          <!-- This uses your uploaded "beh w banner mouse_words.png" -->
-          <img src="assets/beh%20w%20banner%20mouse_words.png" alt="BEH Creative Services artwork" />
-          <div class="caption">Signature style: spray + drips + glow + retro tech. (More portfolio items coming soon.)</div>
+        <div class="divider">
+          <img src="assets/blue%20paint%20brush2.png" alt="Paint divider" />
+        </div>
+
+        <div class="section">
+          <h2>How this site works</h2>
+          <p class="sub">
+            Click the desktop icons on the right. They open windows (services, pricing, delivery).
+            Your assets become the UI — not the content.
+          </p>
         </div>
       </div>
 
-      <div>
-        <div class="window" id="assets">
-          <div class="windowTop">
-            <span class="wdot r"></span><span class="wdot y"></span><span class="wdot g"></span>
-            <span class="wtitle">creative_lab.exe</span>
-          </div>
-          <div class="windowBody">
-            <p>
-              <strong>BEH Asset Pack (90s x street):</strong> reusable icons & elements for print, merch, and brand kits.
-            </p>
+      <!-- CRT workstation -->
+      <aside class="crtStage">
+        <div class="crtTop">
+          <div class="mini">behcreative.exe</div>
+          <div class="pill">STATUS: ONLINE</div>
+        </div>
 
-            <div class="iconRow">
-              <img src="assets/computer.png" alt="CRT computer" />
-              <img src="assets/error%20window.png" alt="Windows-style pop-up" />
-              <img src="assets/tracking%20cursor.png" alt="Tracking cursor" />
-              <img src="assets/boombox.png" alt="Boombox" />
-              <img src="assets/blue%20paint%20brush2.png" alt="Paint brush" />
+        <div class="crtGrid">
+          <div class="crtScreen">
+            <img class="heroLogo" src="assets/beh%20w%20banner%20mouse_words.png" alt="BEH Creative Services" />
+          </div>
+
+          <!-- Desktop icons = functional navigation -->
+          <div class="desk">
+            <div class="icon" id="iconServices">
+              <div class="badge">OPEN</div>
+              <div class="iconTitle">Services</div>
+              <div class="iconSub">Launch the services window (Win95 popup style).</div>
+            </div>
+
+            <div class="icon" id="iconQuote">
+              <div class="badge">NEW</div>
+              <div class="iconTitle">Get a Quote</div>
+              <div class="iconSub">Opens a pre-filled email draft for speed.</div>
+            </div>
+
+            <div class="icon" id="iconDelivery">
+              <div class="badge">ZIP</div>
+              <div class="iconTitle">File Delivery</div>
+              <div class="iconSub">How clients receive PNG/SVG/PDF + brand kits.</div>
             </div>
           </div>
-        </div>
 
-        <div class="window">
-          <div class="windowTop">
-            <span class="wdot r"></span><span class="wdot y"></span><span class="wdot g"></span>
-            <span class="wtitle">welcome.txt</span>
-          </div>
-          <div class="windowBody">
-            <img src="assets/welcome.png" alt="Welcome graphic" style="width:100%;height:auto;border-radius:14px;display:block;" />
-          </div>
         </div>
-      </div>
+      </aside>
     </section>
 
-    <section id="services" class="section">
-      <h2>Services</h2>
-      <div class="grid">
-        <div class="tile">
-          <h3>Logo Design</h3>
-          <p>Clean + bold marks, versions for print & web, and layout-ready exports.</p>
-        </div>
-        <div class="tile">
-          <h3>Brand Kits</h3>
-          <p>Textures, icons, frames, stickers, and a consistent style system you can reuse forever.</p>
-        </div>
-        <div class="tile">
-          <h3>Merch + Print</h3>
-          <p>Hoodie backs, left-chest marks, stickers, flyers, menus, packaging inserts, business cards.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Featured Logo</h2>
-      <p class="muted" style="margin-top:0">This is your uploaded logo file — we can swap it into the hero later if you want.</p>
-      <div class="heroArt">
-        <img src="assets/BEH%20creative%20services_logo.png" alt="BEH Creative Services logo" />
-        <div class="caption">Print-ready, merch-ready, web-ready.</div>
-      </div>
-    </section>
-
-    <section id="contact" class="section">
+    <section class="section" id="contact">
       <h2>Get a quote</h2>
-      <p class="muted" style="margin-top:0">This button opens an email draft for now (fast + simple). We can add a real form later.</p>
+      <p class="sub">Fast mode: click the button — it opens an email draft with your project details.</p>
 
-      <div class="contactCard">
+      <div class="contact">
         <div class="row">
           <label>
             Your email
@@ -361,10 +520,10 @@
           <label>
             What do you need?
             <select id="service">
-              <option value="Logo">Logo</option>
+              <option value="Logo Design">Logo Design</option>
               <option value="Brand Kit">Brand Kit</option>
-              <option value="Merch/Print">Merch / Print</option>
-              <option value="Web/App Graphics">Web / App Graphics</option>
+              <option value="Merch / Print">Merch / Print</option>
+              <option value="Web / App Graphics">Web / App Graphics</option>
               <option value="Other">Other</option>
             </select>
           </label>
@@ -372,13 +531,16 @@
 
         <label>
           Project details
-          <textarea id="details" rows="6" placeholder="Tell me your vibe, deadline, and what files you need (PNG/SVG/PDF)."></textarea>
+          <textarea id="details" rows="6" placeholder="Vibe, deadline, and what files you need (PNG/SVG/PDF)."></textarea>
         </label>
 
-        <button class="btn" id="emailBtn" type="button">Open Email Draft</button>
+        <button class="btn" id="emailBtn" type="button">
+          Open Email Draft
+          <img class="spark" src="assets/4%20stars.png" alt="" />
+        </button>
 
-        <div class="muted" style="font-size:12px;font-weight:800;">
-          Tip: include timeline + budget range + where this will be used (print, web, merch).
+        <div style="color:var(--muted);font-size:12px;font-weight:850;">
+          Tip: include timeline + budget range + usage (print/web/merch).
         </div>
       </div>
     </section>
@@ -390,9 +552,105 @@
     </div>
   </div>
 
+  <!-- SERVICES MODAL (Win95 style) -->
+  <div class="modalOverlay" id="servicesModal" role="dialog" aria-modal="true" aria-label="Services window">
+    <div class="modal">
+      <div class="modalTop">
+        <div class="lights">
+          <span class="wdot r"></span><span class="wdot y"></span><span class="wdot g"></span>
+          <span class="mtitle">error window — actually services</span>
+        </div>
+        <button class="close" id="closeModalBtn" type="button">Close</button>
+      </div>
+
+      <div class="modalBody">
+        <div class="panel">
+          <h2>Services</h2>
+          <p>
+            Your clients don’t want “pretty.” They want files that work:
+            print-ready, merch-ready, and web-ready — with a look nobody forgets.
+          </p>
+
+          <div class="serviceGrid">
+            <div class="svc">
+              <h3>Logo Design</h3>
+              <p>Primary mark + alternates, transparent PNGs, SVG/PDF exports.</p>
+            </div>
+            <div class="svc">
+              <h3>Brand Kit</h3>
+              <p>Textures, icons, frames, colors, typography, usage rules.</p>
+            </div>
+            <div class="svc">
+              <h3>Merch Graphics</h3>
+              <p>Back prints, chest marks, sticker packs, QR layouts.</p>
+            </div>
+            <div class="svc">
+              <h3>Digital Assets</h3>
+              <p>Headers, app UI elements, social templates, web graphics.</p>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" id="modalQuoteBtn" type="button">
+              Start a Project
+              <img class="spark" src="assets/4%20stars.png" alt="" />
+            </button>
+            <a class="btn ghost" href="#contact">Jump to Quote Form</a>
+          </div>
+        </div>
+
+        <div class="panel sideArt">
+          <img src="assets/error%20window.png" alt="Error window art" />
+          <div style="margin-top:10px; color:var(--muted); font-weight:850; font-size:12px;">
+            This “error window” is now your brand’s signature UI container.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // Year
     document.getElementById("year").textContent = new Date().getFullYear();
 
+    // ====== MODAL CONTROL ======
+    const modal = document.getElementById("servicesModal");
+    const openServicesBtn = document.getElementById("openServicesBtn");
+    const openServicesBtn2 = document.getElementById("openServicesBtn2");
+    const iconServices = document.getElementById("iconServices");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
+    function openModal(){
+      modal.style.display = "flex";
+    }
+    function closeModal(){
+      modal.style.display = "none";
+    }
+    [openServicesBtn, openServicesBtn2, iconServices].forEach(el => el.addEventListener("click", openModal));
+    closeModalBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if(e.target === modal) closeModal(); });
+    window.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
+
+    // ====== QUOTE BUTTONS ======
+    const iconQuote = document.getElementById("iconQuote");
+    const openQuoteBtn = document.getElementById("openQuoteBtn");
+    const modalQuoteBtn = document.getElementById("modalQuoteBtn");
+
+    function scrollToContact(){
+      document.getElementById("contact").scrollIntoView({behavior:"smooth"});
+    }
+    [iconQuote, openQuoteBtn, modalQuoteBtn].forEach(el => el.addEventListener("click", () => {
+      closeModal();
+      scrollToContact();
+    }));
+
+    // ====== DELIVERY ICON (simple info for now) ======
+    const iconDelivery = document.getElementById("iconDelivery");
+    iconDelivery.addEventListener("click", () => {
+      alert("Delivery: clients receive a download link (Drive/Zip) + print-ready exports: PNG (transparent), SVG, PDF.");
+    });
+
+    // ====== EMAIL DRAFT ======
     document.getElementById("emailBtn").addEventListener("click", () => {
       const email = document.getElementById("email").value || "(not provided)";
       const service = document.getElementById("service").value;
@@ -418,6 +676,44 @@ Thanks!`
       // CHANGE THIS to your real email:
       const to = "hello@behcreative.com";
       window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+    });
+
+    // ====== HOVER SPARKS (stars pop) ======
+    function attachSparks(selector){
+      document.querySelectorAll(selector).forEach(el => {
+        const spark = el.querySelector(".spark");
+        if(!spark) return;
+
+        el.addEventListener("mousemove", (e) => {
+          const rect = el.getBoundingClientRect();
+          spark.style.left = (e.clientX - rect.left) + "px";
+          spark.style.top  = (e.clientY - rect.top) + "px";
+          spark.style.opacity = "0.95";
+        });
+
+        el.addEventListener("mouseleave", () => {
+          spark.style.opacity = "0";
+        });
+      });
+    }
+    attachSparks(".btn");
+
+    // ====== CURSOR TRAIL (WILD MODE) ======
+    const trailImg = document.getElementById("trailImg");
+    let last = 0;
+    window.addEventListener("mousemove", (e) => {
+      const now = performance.now();
+      if(now - last < 28) return; // throttle
+      last = now;
+
+      trailImg.style.left = e.clientX + "px";
+      trailImg.style.top  = e.clientY + "px";
+      trailImg.style.opacity = "0.55";
+
+      clearTimeout(window.__trailT);
+      window.__trailT = setTimeout(() => {
+        trailImg.style.opacity = "0";
+      }, 90);
     });
   </script>
 </body>
