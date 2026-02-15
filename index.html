@@ -1,23 +1,98 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>BEH Creative Services</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
   <style>
-    body{margin:0;min-height:100vh;display:grid;place-items:center;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      background:#07090d;color:#e9eef8}
-    .card{max-width:680px;padding:28px 22px;border:1px solid rgba(255,255,255,.12);
-      border-radius:18px;background:rgba(255,255,255,.04)}
-    h1{margin:0 0 8px;font-size:34px}
-    p{margin:0;color:rgba(233,238,248,.75);line-height:1.5}
+    body {
+      margin:0;
+      font-family:Arial, sans-serif;
+      background:#07090d;
+      color:white;
+    }
+
+    .hero {
+      height:90vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:20px;
+    }
+
+    h1 {
+      font-size:60px;
+      margin-bottom:10px;
+    }
+
+    h2 {
+      font-weight:normal;
+      opacity:.7;
+    }
+
+    .section {
+      padding:60px 20px;
+      max-width:900px;
+      margin:auto;
+    }
+
+    .services {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+    }
+
+    .card {
+      background:#111;
+      padding:20px;
+      border-radius:12px;
+    }
   </style>
 </head>
+
 <body>
-  <div class="card">
-    <h1>BEH Creative Services</h1>
-    <p>Site coming soon. Dream. Create. Build.</p>
+
+<div class="hero">
+  <div>
+    <h1>BEH Creative</h1>
+    <h2>Dream • Create • Build</h2>
   </div>
+</div>
+
+<div class="section">
+  <h2>What We Do</h2>
+  <p>
+    Graphic design, branding, digital assets, and creative services.
+    Built with personality, nostalgia, and bold energy.
+  </p>
+</div>
+
+<div class="section">
+  <h2>Services</h2>
+
+  <div class="services">
+    <div class="card">
+      <h3>Logo Design</h3>
+      <p>Custom identity systems and brand visuals.</p>
+    </div>
+
+    <div class="card">
+      <h3>Brand Kits</h3>
+      <p>Fonts, colors, assets, and visual language.</p>
+    </div>
+
+    <div class="card">
+      <h3>App & Web Graphics</h3>
+      <p>UI elements, icons, and interactive visuals.</p>
+    </div>
+
+    <div class="card">
+      <h3>Merch Design</h3>
+      <p>Hoodies, stickers, and apparel graphics.</p>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
